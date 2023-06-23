@@ -7,11 +7,12 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
         <script src="./weatherforecast.js"></script>
         <link rel="stylesheet" href="./style.css">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     </head>
     <body>
         <div class="container-fluid">
             <header>
-                <nav class="navbar navbar-expand-lg bg-body-tertiary">
+                <nav class="navbar navbar-expand-lg ">
                     <div class="container-fluid">
                       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
@@ -29,10 +30,8 @@
                             <a class="nav-link disabled">Disabled</a>
                           </li>
                         </ul>
-                        <form class="d-flex" role="search">
-                          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                          <button class="btn btn-outline-success" type="submit">Search</button>
-                        </form>
+                          <input class="form-control me-2 search-by-area" type="search" placeholder="Enter city name" aria-label="Search">
+                          <button class="btn btn-outline-success search-weather-info" type="submit" onclick="searchByInput(this)">Search</button>
                       </div>
                     </div>
                   </nav>
@@ -41,16 +40,47 @@
                 <div id="loading" class="vertical-center">
                     <img id="loading-image" src="./images/page-loader.gif" alt="Loading..." />
                 </div>
-                <div class="row">
+                <div class="row select-geo-location">
                     <div class="col-sm-4">
-                        <select id="countrySelect"></select>
+                        <select id="countrySelect" onchange="getStates(this)">
+                          <option>--select country--</option>
+                        </select>
                     </div>
                     <div class="col-sm-4">
-                        <select id="stateSelect"></select>
+                        <select id="stateSelect" onchange="getCities(this)" style="display: none;">
+                          <option>--select state--</option>
+                        </select>
                     </div>
                     <div class="col-sm-4">
-                        <select id="citySelect"></select>
+                        <select id="citySelect" onchange="onCitySelect(this)" style="display: none;">
+                          <option>--select city--</option>
+                        </select>
                     </div>
+                </div>
+                <div class="area-info" style="display: none;">
+                   <div class="row">
+                      <div class="col-md-4">
+                        <div class="weather-info">
+                          <img class="is-day">
+                          <div class="temprature-info">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-thermometer" viewBox="0 0 16 16">
+                                <path d="M8 14a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                                <path d="M8 0a2.5 2.5 0 0 0-2.5 2.5v7.55a3.5 3.5 0 1 0 5 0V2.5A2.5 2.5 0 0 0 8 0zM6.5 2.5a1.5 1.5 0 1 1 3 0v7.987l.167.15a2.5 2.5 0 1 1-3.333 0l.166-.15V2.5z"/>
+                              </svg>
+                              <span class="temprature-reading"></span>
+                          </div>
+                          <div class="wind-effect">
+                            <div class="wind-direction"></div>
+                            <div class="wind-speed"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-8">
+                          <div class="city-info">
+
+                          </div>
+                      </div>
+                   </div>
                 </div>
             </div>
         </div>

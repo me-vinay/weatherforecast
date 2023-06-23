@@ -84,7 +84,7 @@ function getStates(obj){
         }else{
             select.style.display = "none";
             document.getElementById('citySelect').style.display="none";
-            getCordinates(country)
+            getWeatherData(country)
             document.getElementById('loading').style.display = 'none';
         }    
     })()
@@ -148,7 +148,7 @@ function getCities(obj){
             }    
         }else{
             selectCity.style.display='none';
-            getCordinates(state)
+            getWeatherData(state)
             document.getElementById('loading').style.display = 'none';
         }
     })()
@@ -156,12 +156,12 @@ function getCities(obj){
 
 function onCitySelect(){
     let city = document.getElementById('citySelect').value;
-    const data = getCordinates(city)
+    const data = getWeatherData(city)
     console.log(data);
 }
 
 async function getCordinates(areaname){
-    const url = "https://geocode.maps.co/search?q={"+areaname+"}";
+    const url = "http://api.weatherstack.com/current?access_key=deabd5d593da3bd178b885646de2d906&query=New York";
     response = await fetch(url)
                     .then(res=>{
                         if(res.ok){
@@ -177,51 +177,38 @@ async function getCordinates(areaname){
                     .catch(err => {
                         console.log(err)
                     })
-    getWeatherData(response);
+                    console.log(response);
+   // getWeatherData(response);
 }
 
 
 //https://geocode.maps.co/search?q={noida} api to get lat and long
 //api weather https://api.open-meteo.com/v1/for ecast?latitude=52.52&longitude=13.41&current_weather=true&hourly=temperature_2m,relativehumidity_2m,windspeed_10m
+//deabd5d593da3bd178b885646de2d906
+////api.weatherstack.com/current?access_key=deabd5d593da3bd178b885646de2d906&query=New York
 
 function getWeatherData(data){
-    const lat = (Math.round(data[0].lat * 100) / 100).toFixed(2);
-    const lon =(Math.round(data[0].lon * 100) / 100).toFixed(2);
-    console.log(lat+"  "+lon)
+    // const lat = Math.round(data[0].lat);
+    // const lon = Math.round(data[0].lon);
+    const url = "http://api.weatherstack.com/current?access_key=deabd5d593da3bd178b885646de2d906&query="+data;
     ;(async function(){
-        const url = "https://api.open-meteo.com/v1/forecast?latitude="+lat+"&longitude="+lon+"&current_weather=true&hourly=temperature_2m,relativehumidity_2m,windspeed_10m";
+        //const url = "https://api.open-meteo.com/v1/forecast?latitude="+lon+"&longitude="+lat+"&current_weather=true";
 
         response = await fetch(url)
                     .then(res=>{return res.json()})
                     .then(res=>{return res})
                     .catch(err=>{console.log(err)})
         console.log(response)
-        document.querySelector('.city-info').innerText = (data[0].display_name);
-        document.querySelector('.temprature-reading').innerText = (response.current_weather.temperature);
-        document.querySelector(".wind-direction").innerHTML = "wind direction: "+response.current_weather.winddirection
-        document.querySelector(".wind-speed").innerHTML = "wind speed: "+response.current_weather.windspeed
+        document.querySelector('.city-info').innerText = (response.location.name);
+        document.querySelector('.temprature-reading').innerText = (response.current.temperature);
+        document.querySelector(".wind-direction").innerHTML = "wind direction: "+response.current.wind_dir
+        document.querySelector(".wind-speed").innerHTML = "wind speed: "+response.current.wind_speed
         document.querySelector(".area-info").style.display = "block"
-        let weatherinfo = document.querySelector(".weather-info");
-        let isDay = response.current_weather.is_day;
-        // console.log(isDay)
-        let img = document.querySelector('.is-day');
-        if( isDay == 0){
-            img.src="./images/moon.png";
-            weatherinfo.style.background="#00000070";
-            weatherinfo.style.color="#fff";
-        }else{
-            img.src="./images/sun.png";
-            weatherinfo.style.background="rgb(153 143 115 / 44%)";
-            weatherinfo.style.color="#fff";
-        }
-        
-
     })()
 }
 
 function searchByInput(obj){
     let searchCity = document.querySelector('.search-by-area').value;
-    getCordinates(searchCity)
+    getWeatherData(searchCity)
 }
-
 getCountryName();
